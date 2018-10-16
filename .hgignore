@@ -1,4 +1,8 @@
+syntax: glob
+
 .idea
 cmake-build-debug
 build
+.git
+.gitignore
 **/.vscode
