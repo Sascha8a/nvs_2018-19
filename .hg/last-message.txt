@@ -1,1 +1,1 @@
-Implements loadsim for 07_sync2
+05_threads: Ausgabe des Verlierers / Gewinners
