@@ -1,10 +1,13 @@
+#include <iostream>
 #include "WorkPacket.h"
 
-WorkPacket::WorkPacket(int id) : id(id)
+using namespace std;
+
+WorkPacket::WorkPacket(int id) : _id(id)
 {
 }
 
 int WorkPacket::get_id()
 {
-    return id;
+    return _id;
 }

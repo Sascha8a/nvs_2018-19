@@ -8,6 +8,8 @@ file(GLOB_RECURSE SOURCE_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
+include_directories(include)
+
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(periods EXCLUDE_FROM_ALL ${SOURCE_FILES})

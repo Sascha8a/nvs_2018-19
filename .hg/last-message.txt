@@ -1,1 +1,1 @@
-05_threads: Ausgabe des Verlierers / Gewinners
+07_sync2: Bounded queue implementation with cvs

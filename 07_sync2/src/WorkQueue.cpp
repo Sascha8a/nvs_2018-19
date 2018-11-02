@@ -1,24 +1,27 @@
 #include <queue>
 #include <mutex>
-#include "WorkQueue.h"
+#include <iostream>
+#include <condition_variable>
 
-WorkQueue::WorkQueue()
-{
-}
+#include "WorkQueue.h"
 
 void WorkQueue::push(WorkPacket p)
 {
-    lock_guard<mutex> lock(_queue_lock);
+    unique_lock<mutex> lock(_queue_lock);
+    _queue_not_full.wait(lock, [this] { return _queue.size() < _size; });
 
     _queue.push(p);
+    _queue_not_empty.notify_one();
 }
 
 WorkPacket WorkQueue::pop()
 {
-    lock_guard<mutex> lock(_queue_lock);
+    unique_lock<mutex> lock(_queue_lock);
+    _queue_not_empty.wait(lock, [this] { return _queue.size() > 0; });
 
-    WorkPacket tmp = _queue.front();
+    WorkPacket ret{_queue.front()};
     _queue.pop();
+    _queue_not_full.notify_one();
 
-    return tmp;
+    return ret;
 }

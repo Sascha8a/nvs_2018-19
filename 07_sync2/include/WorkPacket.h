@@ -1,7 +1,7 @@
 class WorkPacket
 {
   private:
-    int id;
+    int _id;
 
   public:
     WorkPacket(int id);
