@@ -9,6 +9,7 @@ data/07_sync2/include/WorkPacket.h.i
 data/02_cppintro2/sieve.cpp.i
 data/04_processes/src/charout.cpp.i
 data/01_cppintro/CMakeLists.txt.i
+data/08_sync3/include/Philosopher.h.i
 data/LICENSE.i
 data/07_sync2/src/main.cpp.i
 data/03_cppintro3/string_testing/meson.build.i
@@ -21,6 +22,7 @@ data/03_cppintro3/src/periods.cpp.i
 data/01_cppintro/roman2dec.cpp.i
 data/.hgignore.i
 data/05_threads/include/Car.hpp.i
+data/08_sync3/src/Philosopher.cpp.i
 data/03_cppintro3/meson.build.i
 data/02_cppintro2/primes.cpp.i
 data/02_cppintro2/CMakeLists.txt.i
@@ -29,4 +31,7 @@ data/07_sync2/src/loadsim.cpp.i
 data/03_cppintro3/CMakeLists.txt.i
 data/05_threads/src/Car.cpp.i
 data/02_cppintro2/main.cpp.i
+data/08_sync3/src/utils.cpp.i
+data/08_sync3/src/main.cpp.i
+data/08_sync3/meson.build.i
 data/07_sync2/src/WorkPacket.cpp.i

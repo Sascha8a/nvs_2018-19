@@ -1,1 +1,1 @@
-07_sync2: Bounded queue implementation with cvs
+08_sync3: Removes utils.cpp, Improves performance of println with c++ templates, relocates println to philosophers.cpp
