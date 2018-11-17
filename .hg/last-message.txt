@@ -1,1 +1,1 @@
-08_sync3: Removes utils.cpp, Improves performance of println with c++ templates, relocates println to philosophers.cpp
+08_sync3: Command line option '--nodeadlock'

@@ -10,7 +10,7 @@ add_global_arguments('-DASIO_STANDALONE', language : 'cpp')
 add_global_arguments('-DASIO_NO_DEPRECATED', language : 'cpp')
 
 inc_dir = include_directories('include')
-src = ['src/main.cpp', 'src/Philosopher.cpp']
+src = ['src/main.cpp', 'src/Philosopher.cpp', 'src/Semaphore.cpp', 'src/Utils.cpp']
 
 executable('08_sync3',
            sources : src,
