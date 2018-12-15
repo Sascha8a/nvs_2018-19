@@ -1,5 +1,8 @@
 #include <iostream>
+#include <future>
+#include <vector>
 #include "InfInt.h"
+#include "calc_factors.h"
 
 using namespace std;
 
@@ -21,7 +24,9 @@ void check_arguments(int *argc, const char *argv[])
         {
             usage();
             exit(EXIT_FAILURE);
-        } else if (string(argv[i]) != InfInt(argv[i]).toString()) {
+        }
+        else if (string(argv[i]) != InfInt(argv[i]).toString())
+        {
             cout << argv[i] << " is not a number!" << endl;
             usage();
             exit(EXIT_FAILURE);
@@ -32,5 +37,18 @@ void check_arguments(int *argc, const char *argv[])
 int main(int argc, const char *argv[])
 {
     check_arguments(&argc, argv);
-    
+
+    vector<future<vector<InfInt>>> futs{};
+
+    for (int i = 1; i < argc; i++)
+    {
+        futs.push_back(async([&]() {
+            return get_factokrs(InfInt(argv[i]));
+        }));
+    }
+
+    for (auto& elem : futs)
+    {
+        auto primes = elem.get();
+    }
 }
