@@ -2,6 +2,7 @@
 
 #include <string>
 #include <chrono>
+#include <tuple>
 
 class Clock
 {
@@ -11,5 +12,8 @@ class Clock
 
   public:
     Clock(std::string name) : _name{name} {};
+    Clock(std::string name, int hours, int minutes, int seconds);
+    void set_time(int hours, int minutes, int seconds);
+    std::tuple<int, int, int> get_time();
     void operator()();
 };

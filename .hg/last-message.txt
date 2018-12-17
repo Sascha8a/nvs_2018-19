@@ -1,1 +1,1 @@
-09_futures: Synchronous calculation of prime_factors
+10_berkeley: Implements a TimeSlave class and creates two instances of it in main
