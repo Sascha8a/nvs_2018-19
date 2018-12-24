@@ -1,1 +1,1 @@
-10_berkeley: Implements a TimeSlave class and creates two instances of it in main
+10_berkeley: Bugfix in channel implementation

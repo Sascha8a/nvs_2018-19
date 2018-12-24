@@ -8,15 +8,23 @@ using namespace std;
 
 int main()
 {
-    thread clock{Clock("SASCHA", 0, 0, 0)};
-    thread slave1{TimeSlave{"Slave1", 0, 0, 0}};
-    thread slave2{TimeSlave{"Slave2", 0, 0, 0}};
-    thread master{TimeMaster{"Master", 0, 0, 0}};
+    Clock clock("SASCHA", 0, 0, 0);
+    TimeMaster master{"Master", 0, 0, 0};
+    TimeSlave slave1{"Slave1", 0, 0, 0};
+    TimeSlave slave2{"Slave2", 0, 0, 0};
+
+    master.set_channel1(slave1.get_channel());
+    master.set_channel2(slave2.get_channel());
+
+    thread clock_thread{clock};
+    thread master_thread{master};
+    thread slave1_thread{slave1};
+    thread slave2_thread{slave2};
     
-    clock.join();
-    slave1.join();
-    slave2.join();
-    master.join();
+    clock_thread.join();
+    master_thread.join();
+    slave1_thread.join();
+    slave2_thread.join();
 
     return EXIT_SUCCESS;
 }

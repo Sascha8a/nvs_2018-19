@@ -1,5 +1,4 @@
-#ifndef PIPE_H
-#define PIPE_H
+#pragma once
 
 #include <queue>
 #include <mutex>
@@ -8,6 +7,7 @@
 template <typename T>
 class Pipe
 {
+  private:
     std::queue<T> _backend;
     std::mutex _mtx;
     std::condition_variable _not_empty;
@@ -18,16 +18,18 @@ class Pipe
     {
         std::lock_guard<std::mutex> lock(_mtx);
 
-        _backend.push(value)
+        _backend.push(value);
 
+        _not_empty.notify_one();
         return *this;
     }
 
     Pipe &operator>>(T &value)
     {
-        std::lock_guard<std::mutex> lock(_mtx);
+        std::unique_lock<std::mutex> lock{_mtx};
+        _not_empty.wait(lock, [this] { return _backend.size() > 0; });
 
-        T value = _backend.front();
+        value = _backend.front();
         _backend.pop();
 
         return *this;
@@ -36,15 +38,14 @@ class Pipe
     void close()
     {
         std::lock_guard<std::mutex> lock(_mtx);
-        
+
         _closed = true;
     }
 
     explicit operator bool()
     {
         std::lock_guard<std::mutex> lock(_mtx);
-        
-        return _backend.size() > 0;
+
+        return !_closed;
     }
 };
-#endif
