@@ -10,7 +10,7 @@ add_global_arguments('-DASIO_STANDALONE', language : 'cpp')
 add_global_arguments('-DASIO_NO_DEPRECATED', language : 'cpp')
 
 inc_dir = include_directories('include')
-src = ['src/main.cpp', 'src/clock.cpp', 'src/timeslave.cpp']
+src = ['src/main.cpp', 'src/clock.cpp', 'src/timeslave.cpp', 'src/timemaster.cpp']
 
 executable('10_berkeley',
            sources : src,
