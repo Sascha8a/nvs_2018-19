@@ -20,7 +20,7 @@ void Clock::operator()()
         ss << _name << " " << _clock << std::endl;
         std::cout << ss.str();
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::seconds(1) + std::chrono::milliseconds(_monoton_offset) + std::chrono::milliseconds(_offset));
         this->_clock += std::chrono::seconds(1);
     }
 }
@@ -28,6 +28,16 @@ void Clock::operator()()
 void Clock::set_time(int hours, int minutes, int seconds)
 {
     _clock = ::set_time(ref(_clock), hours, minutes, seconds);
+}
+
+void Clock::set_time_monoton(bool val)
+{
+    _monoton = val;
+}
+
+void Clock::set_clock_speed_offset(long ms)
+{
+    _offset = ms;
 }
 
 std::tuple<int, int, int> Clock::get_time()
@@ -40,9 +50,15 @@ long Clock::to_time()
     return std::chrono::system_clock::to_time_t(_clock);
 }
 
-void Clock::from_time(long time)
+void Clock::from_time(long new_time)
 {
-    std::cout << _name + " time update: " + std::to_string(time) + "\n" << std::flush;
+    std::cout << _name + " time update: " + std::to_string(new_time) + "\n"
+              << std::flush;
 
-    _clock = std::chrono::system_clock::from_time_t(time);
+    if (_monoton && (to_time() > new_time))
+    {
+        _monoton_offset = 100;
+    } else {
+        _clock = std::chrono::system_clock::from_time_t(new_time);
+    }
 }
