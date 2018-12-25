@@ -20,4 +20,10 @@ public:
   {
     return _pipe2;
   }
+
+  void set_latency(long latency)
+  {
+    _pipe1.set_latency(latency);
+    _pipe2.set_latency(latency);
+  }
 };

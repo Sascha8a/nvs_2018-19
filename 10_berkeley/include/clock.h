@@ -15,5 +15,7 @@ class Clock
     Clock(std::string name, int hours, int minutes, int seconds);
     void set_time(int hours, int minutes, int seconds);
     std::tuple<int, int, int> get_time();
+    long to_time();
+    void from_time(long time);
     void operator()();
 };

@@ -6,7 +6,7 @@
 
 TimeSlave::TimeSlave(std::string name, int hours, int minutes, int seconds) : _clock{name, hours, minutes, seconds}, _name{name}
 {
-    std::thread t1{_clock};
+    std::thread t1{std::ref(_clock)};
     t1.detach();
 
     _channel = new Channel();
@@ -14,10 +14,15 @@ TimeSlave::TimeSlave(std::string name, int hours, int minutes, int seconds) : _c
 
 void TimeSlave::operator()()
 {
-    while (_channel->get_pipe1())
+    long new_time;
+
+    while (_channel->get_pipe1() >> new_time)
     {
-        long value;
-        _channel->get_pipe1() >> value;
-        std::cout << _name + " received: " + std::to_string(value) + "\n" << std::flush;
+        if (new_time > 0) {
+            _clock.from_time(new_time);
+        } else {
+            std::cout << _name + " time request: " + std::to_string(_clock.to_time()) + "\n" << std::flush;
+            _channel->get_pipe2() << _clock.to_time();
+        }
     }
 }

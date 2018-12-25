@@ -11,6 +11,7 @@ private:
   Clock _clock;
   Channel *_channel1;
   Channel *_channel2;
+  void berkeley_sync();
 
 public:
   TimeMaster(std::string name, int hours, int minutes, int seconds);

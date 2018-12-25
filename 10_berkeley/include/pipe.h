@@ -3,6 +3,7 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
+#include <future>
 
 template <typename T>
 class Pipe
@@ -11,24 +12,36 @@ class Pipe
     std::queue<T> _backend;
     std::mutex _mtx;
     std::condition_variable _not_empty;
+    long _latency{0};
     bool _closed{false};
 
   public:
     Pipe &operator<<(T value)
     {
-        std::lock_guard<std::mutex> lock(_mtx);
+        std::future<void> fut{std::async([&] {
+            if (_latency)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(_latency));
+            }
+            std::lock_guard<std::mutex> lock(_mtx);
+            _backend.push(value);
+            _not_empty.notify_one();
+        })};
 
-        _backend.push(value);
+        fut.wait();
 
-        _not_empty.notify_one();
         return *this;
     }
 
     Pipe &operator>>(T &value)
     {
+        if (_closed)
+        {
+            return *this;
+        }
+
         std::unique_lock<std::mutex> lock{_mtx};
         _not_empty.wait(lock, [this] { return _backend.size() > 0; });
-
         value = _backend.front();
         _backend.pop();
 
@@ -47,5 +60,10 @@ class Pipe
         std::lock_guard<std::mutex> lock(_mtx);
 
         return !_closed;
+    }
+
+    void set_latency(long latency)
+    {
+        _latency = latency;
     }
 };
