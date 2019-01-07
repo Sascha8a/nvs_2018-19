@@ -1,57 +1,37 @@
 #include <thread>
+#include <iostream>
 
 #include "clock.h"
 #include "timeslave.h"
 #include "timemaster.h"
+#include "clipp.h"
 
 using namespace std;
+using namespace clipp;
 
-bool contains(int argc, const char *argv[], string str)
-{
-
-    for (int i = 1; i < argc; i++)
-    {
-        auto converted = string(argv[i]);
-        if (converted.find_first_of(str))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-int main(int argc, const char *argv[])
+int main(int argc, char *argv[])
 {
     bool monotone{false};
+    bool help{false};
 
-    if (contains(argc, argv, "-h") || contains(argc, argv, "--help"))
-    {
-        printf("Usage: berkeley [-h] [-m] [-d<delay1>,<delay2>] [-r<rateM>,<rate1>,<rate2>]\n");
-        printf("Options:\n");
-        printf("  -h|--help help\n");
-        printf("  -m        monoton (kein Zurückstellen der Uhren)\n");
-        printf("  -d        Verzögerungen in ms (d.h. Latenz der Verbindung zu jeweiligen Slave)\n");
-        printf("  -r        Abweichungen vom Sekundentakt in ms (der jeweiligen Uhr,\n");
-        printf("            d.h. Ungenauigkeit)\n");
-        exit(EXIT_SUCCESS);
-    }
+    bool delay{false};
+    int delayS1{};
+    int delayS2{};
 
-    if (contains(argc, argv, "-m"))
-    {
-        monotone = true;
-    }
+    bool rate = false;
+    int rateM{0};
+    int rateS1{0};
+    int rateS2{0};
 
-    if (contains(argc, argv, "-d"))
+    auto cli = (option("-h", "--help").set(help).doc("show this help"),
+                option("-m").set(monotone).doc("monoton (kein Zurückstellen der Uhren)"),
+                option("-d").set(delay).doc("Verzögerungen in ms (d.h. Latenz der Verbindung zu jeweiligen Slave)") & value("delay1", delayS1) & value("delay2", delayS2),
+                option("-r").set(rate).doc("Abweichungen vom Sekundentakt in ms (der jeweiligen Uhr, d.h. Ungenauigkeit)") & value("rateM", rateM) & value("rate1", rateS1) & value("rate2", rateS2));
+
+    if (!parse(argc, argv, cli) || help)
     {
-        for (int i = 1; i < argc; i++)
-        {
-            auto converted = string(argv[i]);
-            if (converted.find_first_of("-d"))
-            {
-                
-            }
-        }
+        std::cout << make_man_page(cli, argv[0]);
+        exit(0);
     }
 
     // Clock clock("REAL", 0, 0, 1);
@@ -59,8 +39,12 @@ int main(int argc, const char *argv[])
     TimeSlave slave1{"Slave1", 0, 0, 10, monotone};
     TimeSlave slave2{"Slave2", 0, 0, 15, monotone};
 
-    slave1.get_channel()->set_latency(100);
-    slave2.get_channel()->set_latency(200);
+    slave1.get_channel()->set_latency(delayS1);
+    slave2.get_channel()->set_latency(delayS2);
+
+    master.set_clock_speed(rateM);
+    slave1.set_clock_speed(rateS1);
+    slave2.set_clock_speed(rateS2);
 
     master.set_channel1(slave1.get_channel());
     master.set_channel2(slave2.get_channel());
