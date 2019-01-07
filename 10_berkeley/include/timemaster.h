@@ -14,7 +14,7 @@ private:
   void berkeley_sync();
 
 public:
-  TimeMaster(std::string name, int hours, int minutes, int seconds);
+  TimeMaster(std::string name, int hours, int minutes, int seconds, bool monotone);
   void set_channel1(Channel *c)
   {
     _channel1 = c;

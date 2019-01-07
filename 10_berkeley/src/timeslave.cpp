@@ -4,8 +4,9 @@
 #include "timeslave.h"
 #include "clock.h"
 
-TimeSlave::TimeSlave(std::string name, int hours, int minutes, int seconds) : _clock{name, hours, minutes, seconds}, _name{name}
+TimeSlave::TimeSlave(std::string name, int hours, int minutes, int seconds, bool monotone) : _clock{name, hours, minutes, seconds}, _name{name}
 {
+    _clock.set_time_monoton(monotone);
     std::thread t1{std::ref(_clock)};
     t1.detach();
 

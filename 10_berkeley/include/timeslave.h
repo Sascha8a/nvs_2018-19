@@ -13,7 +13,7 @@ private:
   std::string _name;
 
 public:
-  TimeSlave(std::string name, int hours, int minutes, int seconds);
+  TimeSlave(std::string name, int hours, int minutes, int seconds, bool monotone);
   Channel *get_channel()
   {
     return _channel;
