@@ -1,1 +1,1 @@
-10_berkeley: Implementation monotone time
+11_daytime: Implements simple daytime client
