@@ -1,1 +1,1 @@
-11_daytime: Implements simple daytime client
+11_daytime: Implements a single-threaded daytime server with logging and CLI

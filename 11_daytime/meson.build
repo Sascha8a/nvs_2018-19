@@ -40,11 +40,14 @@ add_global_arguments('-I' + get_option('json_include_dir'), language : 'cpp')
 # subdir('SUBDIR1')
 
 inc_dir = include_directories('include')
-src = ['src/main.cpp']
-#protobuf: src = ['src/main.cpp', generated]
 
-executable('11_daytime',
-           sources : src,
+executable('daytime_client',
+           sources : 'src/daytime_client/main.cpp',
+           include_directories : inc_dir,
+           dependencies : [thread_dep]
+          )
+executable('daytime_server',
+           sources : 'src/daytime_server/main.cpp',
            include_directories : inc_dir,
            dependencies : [thread_dep]
           )
