@@ -1,1 +1,1 @@
-11_daytime: Implements a single-threaded daytime server with logging and CLI
+12_time: Fork of 11_daytime, but with time protocol - client only
