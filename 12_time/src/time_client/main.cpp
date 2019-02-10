@@ -33,14 +33,21 @@ int main(int argc, char *argv[])
     tcp::iostream strm{"localhost", port};
     if (strm)
     {
-        strm << endl;
-        spdlog::log(spdlog::level::level_enum::info, "Connected to server!");
+        uint32_t data;
+        strm.read(reinterpret_cast<char *>(&data), sizeof(data));
+        cout << data << endl;
+        data = ntohl(data);
+        data -= 2208988800;
 
-        uint32_t x;
-        strm.read(reinterpret_cast<char *>(&x), sizeof(x));
-        chrono::time_point<chrono::system_clock> now{
-            chrono::seconds{ntohl(x) - 220898880}};
-        cout << now << endl;
+        if (strm)
+        {
+            chrono::time_point<chrono::system_clock> now{chrono::seconds{data}};
+            cout << now << endl;
+        }
+        else
+        {
+            spdlog::log(spdlog::level::level_enum::err, strm.error().message());
+        }
 
         strm.close();
 

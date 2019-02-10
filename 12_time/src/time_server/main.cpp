@@ -1,22 +1,25 @@
 #include <iostream>
 #include <thread>
+#include <asio.hpp>
 
-#include <spdlog/spdlog.h>
+#include "clipp.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic ignored "-Wconversion"
-#include "asio.hpp"
-#include "clipp.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 #pragma GCC diagnostic pop
 
 using namespace std;
 using namespace asio::ip;
 using namespace clipp;
 
-long get_date_time()
+uint32_t get_date_time()
 {
-    return chrono::duration_cast<chrono::seconds>(chrono::system_clock::now().time_since_epoch()).count() + 2208988800;
+    auto duration{chrono::system_clock::now().time_since_epoch()};
+    auto seconds{chrono::duration_cast<chrono::duration<uint32_t>>(duration).count()};
+    seconds += 2208988800;
+    return ntohl(seconds);
 }
 
 int main(int argc, char *argv[])
@@ -44,15 +47,10 @@ int main(int argc, char *argv[])
         tcp::iostream strm{std::move(sock)};
         if (strm)
         {
-            long time_to_epoch{2208988800};
+            spdlog::log(spdlog::level::level_enum::info, "Sending time to client!");
 
-            uint32_t output;
-            spdlog::log(spdlog::level::level_enum::err, "Sending time to server!");
-            auto d = std::chrono::system_clock::now().time_since_epoch();
-            long timestamp = std::chrono::duration_cast<std::chrono::seconds>(d).count();
-            output = timestamp + time_to_epoch;
-            output = ntohl(output);
-            strm.write(reinterpret_cast<char*>(&output), sizeof(output));
+            uint32_t date{get_date_time()};
+            strm.write(reinterpret_cast<char *>(&date), sizeof(date));
             strm.close();
         }
         else

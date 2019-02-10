@@ -1,1 +1,1 @@
-12_time: Fork of 11_daytime, but with time protocol - client only
+12_time: Implementation of the client as speciafied in 12_time.pdf
